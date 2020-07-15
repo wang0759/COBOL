@@ -39,5 +39,11 @@
        COMPUTE Total = Num1 + Num2
        DISPLAY Num1 "+" Num2 "=" Total
 
+       DISPLAY "ENTER YOUR SSN, PLZ"
+       ACCEPT SSNum
+       DISPLAY "AREA " SSArea
+       display "group " SSGroup
+       DISPLAY "SERIAL " SSSerial
+
        STOP RUN.
 
