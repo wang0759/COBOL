@@ -1,0 +1,13 @@
+install:
+1.install vs code
+2. install brew: /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/master/install.sh)"
+3.brew install gnu-cobol
+4.quanyiwang@192 ~ % cobc -version
+
+
+test:
+1.use terminal   cd  ....    to the cobol file folder
+2.cobc -x hello.cob
+3. ./hello
+
+
