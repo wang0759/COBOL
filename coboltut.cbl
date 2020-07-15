@@ -10,7 +10,7 @@
        DATA DIVISION.
        FILE SECTION.
        WORKING-STORAGE SECTION.
-       01 SampleData PIC X(10) VALUE "Stuff".
+       01 SampleData PIC X(15) VALUE "Stuff".
        01 JustLetters PIC AAA VALUE "ABC".
        01 JustNums PIC 9(4) VALUE 1234.
        01 SignedInt PIC S9(4) VALUE -1234.
@@ -31,14 +31,33 @@
        01 Rem PIC 9V99.
 
        PROCEDURE DIVISION.
-       MOVE "MORE STUFF" TO SampleData
-       MOVE "123" TO SampleData
-       MOVE 123 TO SampleData
+       MOVE "123MORE STUFF" TO SampleData
        DISPLAY SampleData
+       DISPLAY JustLetters
+       DISPLAY JustNums
+       DISPLAY SignedInt
        DISPLAY PayCheck
        MOVE "123Wang Quanyi 12251990" to Customer
        DISPLAY CustName
        DISPLAY MOB "/" DOB "/" YOB
+       DISPLAY Ans
+
+       MOVE ZERO TO SampleData
+       DISPLAY SampleData
+       MOVE SPACE TO SampleData
+       DISPLAY SampleData
+       MOVE HIGH-VALUE TO SampleData
+       DISPLAY SampleData
+       MOVE LOW-VALUE TO SampleData
+       DISPLAY SampleData
+       MOVE QUOTE TO SampleData
+       DISPLAY SampleData
+       MOVE ALL "2" TO SampleData
+       DISPLAY SampleData
+       MOVE "*" TO SampleData
+       DISPLAY SampleData
+       MOVE 2 TO SampleData
+       DISPLAY SampleData
 
        STOP RUN.
 
