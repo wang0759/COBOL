@@ -17,9 +17,8 @@
        SubOne.
        DISPLAY "In Paragraph 1"
        PERFORM SubTwo
-       
        DISPLAY "Returned to Paragraph 1"
-       PERFORM 1 TIMES
+       PERFORM 2 TIMES
        DISPLAY "Repeat"
        END-PERFORM
        STOP RUN.
@@ -32,5 +31,5 @@
        PERFORM SubThree
        DISPLAY "Returned to Paragraph 2".
 
-       STOP RUN.
+       *>    STOP RUN.
 
