@@ -1,102 +1,78 @@
-        *>   >>SOURCE FORMAT FREE
+       >>SOURCE FORMAT FREE
        IDENTIFICATION DIVISION.
-       
        PROGRAM-ID.  coboltut.
        AUTHOR. QUANYI WANG.
        DATE-WRITTEN. JULY 15 2020
-
        ENVIRONMENT DIVISION.
-
+       CONFIGURATION SECTION.
+       SPECIAL-NAMES.
+           CLASS PassingScore IS "A" THRU "C","D".
        DATA DIVISION.
        FILE SECTION.
        WORKING-STORAGE SECTION.
-       01 SampleData PIC X(15) VALUE "Stuff".
-       01 JustLetters PIC AAA VALUE "ABC".
-       01 JustNums PIC 9(4) VALUE 1234.
-       01 SignedInt PIC S9(4) VALUE -1234.
-       *> V99: 2 DECIMAL PLACES   
-       01 PayCheck PIC 9(4)V99 VALUE ZEROS.
-       01 Customer.
-           02 Ident PIC 9(3).
-           02 CustName PIC X(12).
-           02 DateOfBirth.
-               03 MOB PIC 99.
-               03 DOB PIC 99.
-               03 YOB PIC 9(4).
-       01 Num1 PIC 9 VALUE 5.
-       01 Num2 PIC 9 VALUE 4.
-       01 Num3 PIC 9 VALUE 3.
-       01 Ans PIC S99V99 VALUE 0.
-        *>    SIGNED 2 DIGITS WITH 2 DECIMALS
-       01 Rem PIC 9V99.
+       01 Age PIC 99 VALUE 0.
+       01 Grade PIC 99 VALUE 0.
+       01 SCORE PIC X(1) VALUE "B".
+       01 CanVoteFlage PIC 9 VALUE 0.
+           88 CanVote VALUE 1.
+           88 CantVote VALUE 0.
+       01 TestNumber PIC X.
+           88 IsPrime VALUE "1","3","5","7".
+           88 IsOdd VALUE "1","3","5","7","9".
+           88 IsEven VALUE "0","2","4","6","8".
+           88 ANumber VALUE "0" THRU "9".
+       01  LessThan5 PIC 9 value 0.
 
+  
        PROCEDURE DIVISION.
-       MOVE "123MORE STUFF" TO SampleData
-       DISPLAY SampleData
-       DISPLAY JustLetters
-       DISPLAY JustNums
-       DISPLAY SignedInt
-       DISPLAY PayCheck
-       MOVE "123Wang Quanyi 12251990" to Customer
-       DISPLAY CustName
-       DISPLAY MOB "/" DOB "/" YOB
-       DISPLAY Ans
+       DISPLAY "ENTER AGE: " WITH NO ADVANCING
+       ACCEPT Age.
+       IF Age > 18
+           display "You can vote."
+       ELSE
+           DISPLAY "You can't vote."
+       END-IF
+       IF AGE LESS THAN 5 THEN
+           DISPLAY "STAY HOME"
+       END-IF
 
-       MOVE ZERO TO SampleData
-       DISPLAY SampleData
-       MOVE SPACE TO SampleData
-       DISPLAY SampleData
-       MOVE HIGH-VALUE TO SampleData
-       DISPLAY SampleData
-       MOVE LOW-VALUE TO SampleData
-       DISPLAY SampleData
-       MOVE QUOTE TO SampleData
-       DISPLAY SampleData
-       MOVE ALL "2" TO SampleData
-       DISPLAY SampleData
-       MOVE all "*" TO SampleData
-       DISPLAY SampleData
-       MOVE 2 TO SampleData
-       DISPLAY SampleData
+       IF AGE > 5 AND AGE <18
+           COMPUTE GRADE=AGE - 5
+           DISPLAY "GO TO GRADE:" GRADE
+        END-IF
 
-       ADD Num1 to Num2 GIVING Ans
-       display Ans 
-       SUBTRACT Num1 FROM Num2 GIVING Ans
-       display Ans 
-       MULTIPLY Num1 by Num2 GIVING Ans
-       display Ans
-       divide Num1 into Num2 GIVING Ans
-       DISPLAY Ans 
-       divide Num3 into Num1 giving Ans REMAINDER Rem 
-       display "Remainder" Rem 
-       divide 3 into 5 giving Ans REMAINDER Rem 
-       display "Remainder" Rem 
+        IF AGE GREATER THAN OR EQUAL TO 18
+           DISPLAY "GO TO COLLEGE"
+        END-IF
 
-       Add Num1,Num2, Num3 giving Ans
-       display Ans
+        IF AGE>18
+           SET CantVote TO TRUE
+        ELSE
+           SET CantVote TO TRUE
+        END-IF
+        DISPLAY "VOTE STATUS:" CanVoteFlage
 
-       COMPUTE Ans = Num1 + Num2
-       display Ans
+        DISPLAY "ENTER SINGLE NUMBER OR X TO EXIT: "
+        ACCEPT TestNumber
+        IF TestNumber < 5
+        DISPLAY LessThan5
+        END-IF
 
-       COMPUTE Ans = Num1 * Num2
-       display Ans
+       *> You can verify values fit a classification
+       IF Score IS PassingScore THEN
+           DISPLAY "You Passed"
+       ELSE
+           DISPLAY "You Failed"
+       END-IF
+       PERFORM UNTIL NOT ANumber
+           EVALUATE TRUE
+               WHEN IsPrime DISPLAY "PRIME"
+               WHEN IsOdd DISPLAY "ODD"
+               WHEN IsEven DISPLAY "EVEN"
+               when other display "Default Action"
+           END-EVALUATE
+           accept TestNumber   
+        END-PERFORM
 
-       COMPUTE Ans = Num1 / Num2
-       display Ans
-       COMPUTE Ans = Num1 ** Num2
-       display Ans
-        *>  5**4?=25
-
-       COMPUTE Ans = 5**4
-       display Ans
-        *> ???
-        
-       COMPUTE Ans = Num1 ** 2
-       display Ans
-       COMPUTE Ans ROUNDED = Num1 + 2.005
-       display Ans
-
-
-
-       STOP RUN.
+        STOP RUN.
 
