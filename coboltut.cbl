@@ -54,10 +54,49 @@
        DISPLAY SampleData
        MOVE ALL "2" TO SampleData
        DISPLAY SampleData
-       MOVE "*" TO SampleData
+       MOVE all "*" TO SampleData
        DISPLAY SampleData
        MOVE 2 TO SampleData
        DISPLAY SampleData
+
+       ADD Num1 to Num2 GIVING Ans
+       display Ans 
+       SUBTRACT Num1 FROM Num2 GIVING Ans
+       display Ans 
+       MULTIPLY Num1 by Num2 GIVING Ans
+       display Ans
+       divide Num1 into Num2 GIVING Ans
+       DISPLAY Ans 
+       divide Num3 into Num1 giving Ans REMAINDER Rem 
+       display "Remainder" Rem 
+       divide 3 into 5 giving Ans REMAINDER Rem 
+       display "Remainder" Rem 
+
+       Add Num1,Num2, Num3 giving Ans
+       display Ans
+
+       COMPUTE Ans = Num1 + Num2
+       display Ans
+
+       COMPUTE Ans = Num1 * Num2
+       display Ans
+
+       COMPUTE Ans = Num1 / Num2
+       display Ans
+       COMPUTE Ans = Num1 ** Num2
+       display Ans
+        *>  5**4?=25
+
+       COMPUTE Ans = 5**4
+       display Ans
+        *> ???
+        
+       COMPUTE Ans = Num1 ** 2
+       display Ans
+       COMPUTE Ans ROUNDED = Num1 + 2.005
+       display Ans
+
+
 
        STOP RUN.
 
