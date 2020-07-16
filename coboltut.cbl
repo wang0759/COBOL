@@ -1,35 +1,13 @@
-        *> >>SOURCE FORMAT FREE
+        >>SOURCE FORMAT FREE
        IDENTIFICATION DIVISION.
-       PROGRAM-ID.  coboltut.
-       AUTHOR. QUANYI WANG.
-       DATE-WRITTEN. JULY 15 2020
-       ENVIRONMENT DIVISION.
-       CONFIGURATION SECTION.
-       SPECIAL-NAMES.
-
+       PROGRAM-ID. coboltut.
        DATA DIVISION.
-       FILE SECTION.
        WORKING-STORAGE SECTION.
-
-
-  
+           01 Num1    PIC 9 VALUE 5.
+           01 Num2    PIC 9 VALUE 4.
+           01 Sum1     PIC 99.
        PROCEDURE DIVISION.
-       SubOne.
-       DISPLAY "In Paragraph 1"
-       PERFORM SubTwo
-       DISPLAY "Returned to Paragraph 1"
-       PERFORM 2 TIMES
-       DISPLAY "Repeat"
-       END-PERFORM
+       *> Call the subroutine in the other file and display the result
+       CALL 'GETSUM' USING Num1, Num2, Sum1.
+       DISPLAY Num1 " + " Num2 " = " Sum1.
        STOP RUN.
- 
-       SubThree.
-       DISPLAY "In Paragraph 3".
-       
-       SubTwo.
-       DISPLAY "In Paragraph 2"
-       PERFORM SubThree
-       DISPLAY "Returned to Paragraph 2".
-
-       *>    STOP RUN.
-
