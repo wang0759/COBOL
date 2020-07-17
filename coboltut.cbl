@@ -37,7 +37,7 @@ WORKING-STORAGE SECTION.
        02 FILLER PIC X(7) VALUE "Page : ".
        02 PrnPageNum PIC Z9.
 *> Column headings for data
-01 Heads PIC X(36) VALUE "IDNum        FirstName      LastName".
+01 Heads PIC X(40) VALUE " IDNum       FirstName        LastName".
 *> Customer data to print with spaces defined
 01 CustomerDetailLine.
        02 FILLER PIC X VALUE SPACE.
