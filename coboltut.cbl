@@ -1,59 +1,96 @@
        >>SOURCE FORMAT FREE
 IDENTIFICATION DIVISION.
-PROGRAM-ID. coboltut.
+PROGRAM-ID. COBOLTUT.
+*> Here we'll design and print a customer report
  
 ENVIRONMENT DIVISION.
 INPUT-OUTPUT SECTION.
-*> Connect the name of the customer file name in this
-*> code to a file. Records on separate lines
 FILE-CONTROL.
+       *> Define the file to save the report to
+       SELECT CustomerReport ASSIGN TO "CustReport.rpt"
+           ORGANIZATION IS LINE SEQUENTIAL.
+       *> The file that provides the data
        SELECT CustomerFile ASSIGN TO "Customer.dat"
-           ORGANIZATION IS LINE sequential
-           ACCESS IS sequential.
+           ORGANIZATION IS LINE SEQUENTIAL.
  
 DATA DIVISION.
-*> File section describes data in files
 FILE SECTION.
-*> FD (File Description) describes the file layout
-FD CustomerFile. 
-*> Design the customer record
+*> Define FD and custom print line
+FD CustomerReport.
+01 PrintLine PIC X(44).
+ 
+*> Info on customer data
+FD CustomerFile.
 01 CustomerData.
        02 IDNum    PIC 9(8).
        02 CustName.
            03 FirstName    PIC X(15).
            03 LastName     PIC X(15).
+       88 WSEOF   VALUE HIGH-VALUE.
  
 WORKING-STORAGE SECTION.
-01 WSCustomer.
-       02 WSIDNum    PIC 9(5).
-       02 WSCustName.
-           03 WSFirstName    PIC X(15).
-           03 WSLastName     PIC X(15).
+*> Break the report up into pieces
+01 PageHeading.
+       02 FILLER PIC X(13) VALUE "Customer List".
+01 PageFooting.
+       02 FILLER PIC X(15) VALUE SPACE.
+       02 FILLER PIC X(7) VALUE "Page : ".
+       02 PrnPageNum PIC Z9.
+*> Column headings for data
+01 Heads PIC X(36) VALUE "IDNum        FirstName      LastName".
+*> Customer data to print with spaces defined
+01 CustomerDetailLine.
+       02 FILLER PIC X VALUE SPACE.
+       02 PrnCustID PIC 9(8).
+       02 FILLER PIC X(4) VALUE SPACE.
+       02 PrnFirstName PIC X(15). 
+       02 FILLER PIC XX VALUE SPACE.
+       02 PrnLastName PIC X(15).
+*> Printed at end of report
+01 ReportFooting PIC X(13) VALUE "END OF REPORT".
+*> Tracks number of lines used, when to print footer
+*> and new heading
+01 LineCount PIC 99 VALUE ZERO.
+       88 NewPageRequired VALUE 40 THRU 99.
+*> Track number of pages
+01 PageCount PIC 99 VALUE ZERO.
  
 PROCEDURE DIVISION.
-*> COBOL focuses on working with external files or
-*> databases. Here we will work with sequential files
-*> which are files you must work with in order. They
-*> differ from direct access files in that direct access
-*> files have keys associated with data.
-*> Field : Individual piece of information (First Name)
-*> Record : Collection of fields for an individual object
-*> File : Collection of numerous Records 
- 
-*> We process a file by loading one record into memory
-*> This is called a Record Buffer
- 
-*> Open the file and if it doesn't exist create it
-*> Add data to all fields, write them to the file
-*> and close the file
-OPEN EXTEND CustomerFile.
-       DISPLAY "Customer ID " WITH NO ADVANCING
-       ACCEPT IDNum.
-       DISPLAY "Customer First Name " WITH NO ADVANCING
-       ACCEPT FirstName.
-       DISPLAY "Customer Last Name " WITH NO ADVANCING
-       ACCEPT LastName.
-       WRITE CustomerData
-       END-WRITE.
-CLOSE CustomerFile.
+PrintReport.
+OPEN INPUT CustomerFile
+OPEN OUTPUT CustomerReport
+PERFORM PrintPageHeading
+*> Read customer file until end
+READ CustomerFile
+       AT END SET WSEOF TO TRUE
+END-READ
+PERFORM PrintReportBody UNTIL WSEOF
+*> Advancing moves down defined number of lines
+WRITE PrintLine FROM ReportFooting AFTER ADVANCING 5 LINES
+CLOSE CustomerFile, CustomerReport
 STOP RUN.
+ 
+*> Prints heading and tracks page count
+PrintPageHeading.
+WRITE PrintLine FROM PageHeading AFTER ADVANCING Page
+WRITE PrintLine FROM Heads AFTER ADVANCING 5 LINES
+MOVE 3 TO LineCount
+ADD 1 TO PageCount.
+ 
+*> Handles creating new page logic and printing customer
+*> data
+PrintReportBody.
+IF NewPageRequired
+       MOVE PageCount TO PrnPageNum
+       WRITE PrintLine FROM PageFooting AFTER ADVANCING 5 LINES
+       PERFORM PrintPageHeading
+END-IF
+*> Move data to be printed to report
+MOVE IDNum TO PrnCustID
+MOVE FirstName TO PrnFirstName
+MOVE LastName TO PrnLastName
+WRITE PrintLine FROM CustomerDetailLine AFTER ADVANCING 1 LINE
+ADD 1 TO LineCount
+READ CustomerFile
+       AT END SET WSEOF TO TRUE
+END-READ.
