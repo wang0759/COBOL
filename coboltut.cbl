@@ -8,14 +8,14 @@ INPUT-OUTPUT SECTION.
 *> code to a file. Records on separate lines
 FILE-CONTROL.
        SELECT CustomerFile ASSIGN TO "Customer.dat"
-           ORGANIZATION IS LINE SEQUENTIAL
-           ACCESS IS SEQUENTIAL.
+           ORGANIZATION IS LINE sequential
+           ACCESS IS sequential.
  
 DATA DIVISION.
 *> File section describes data in files
 FILE SECTION.
 *> FD (File Description) describes the file layout
-FD CustomerFile.
+FD CustomerFile. 
 *> Design the customer record
 01 CustomerData.
        02 IDNum    PIC 9(8).
@@ -46,10 +46,13 @@ PROCEDURE DIVISION.
 *> Open the file and if it doesn't exist create it
 *> Add data to all fields, write them to the file
 *> and close the file
-OPEN OUTPUT CustomerFile.
-       MOVE 00001 TO IDNum.
-       MOVE 'Doug' TO FirstName.
-       MOVE 'Thomas' TO LastName.
+OPEN EXTEND CustomerFile.
+       DISPLAY "Customer ID " WITH NO ADVANCING
+       ACCEPT IDNum.
+       DISPLAY "Customer First Name " WITH NO ADVANCING
+       ACCEPT FirstName.
+       DISPLAY "Customer Last Name " WITH NO ADVANCING
+       ACCEPT LastName.
        WRITE CustomerData
        END-WRITE.
 CLOSE CustomerFile.
