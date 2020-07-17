@@ -1,83 +1,56 @@
        >>SOURCE FORMAT FREE
-       IDENTIFICATION DIVISION.
-       PROGRAM-ID. coboltut.
-       DATA DIVISION.
+IDENTIFICATION DIVISION.
+PROGRAM-ID. coboltut.
+ 
+ENVIRONMENT DIVISION.
+INPUT-OUTPUT SECTION.
+*> Connect the name of the customer file name in this
+*> code to a file. Records on separate lines
+FILE-CONTROL.
+       SELECT CustomerFile ASSIGN TO "Customer.dat"
+           ORGANIZATION IS LINE SEQUENTIAL
+           ACCESS IS SEQUENTIAL.
+ 
+DATA DIVISION.
+*> File section describes data in files
+FILE SECTION.
+*> FD (File Description) describes the file layout
+FD CustomerFile.
+*> Design the customer record
+01 CustomerData.
+       02 IDNum    PIC 9(8).
+       02 CustName.
+           03 FirstName    PIC X(15).
+           03 LastName     PIC X(15).
+ 
 WORKING-STORAGE SECTION.
-01 SampStr     PIC X(18) VALUE 'eerie beef sneezed'.
-01 NumChars    PIC 99 VALUE 0.
-01 NumEs       PIC 99 VALUE 0.
-01 FName       PIC X(6) VALUE 'Martin'.
-01 MName       PIC X(11) VALUE 'Luther King'.
-01 LName       PIC X(4) VALUE 'King'.
-01 FLName      PIC X(11).
-01 FMLName     PIC X(18).
-01 SStr1       PIC X(7) VALUE "The egg".
-01 SStr2       PIC X(9) VALUE "is #1 and".
-01 Dest        PIC X(33) VALUE "is the big chicken". 
-01 Ptr         PIC 9 VALUE 1.
-01 SStr3       PIC X(3).
-01 SStr4       PIC X(3).
+01 WSCustomer.
+       02 WSIDNum    PIC 9(5).
+       02 WSCustName.
+           03 WSFirstName    PIC X(15).
+           03 WSLastName     PIC X(15).
  
 PROCEDURE DIVISION.
-*> Takes string SampStr counts all characters and
-*> stores the value in NumChars
-INSPECT SampStr TALLYING NumChars FOR CHARACTERS.
-DISPLAY "Number of Characters : " NumChars.
+*> COBOL focuses on working with external files or
+*> databases. Here we will work with sequential files
+*> which are files you must work with in order. They
+*> differ from direct access files in that direct access
+*> files have keys associated with data.
+*> Field : Individual piece of information (First Name)
+*> Record : Collection of fields for an individual object
+*> File : Collection of numerous Records 
  
-INSPECT SampStr TALLYING NumEs FOR ALL 'e'.
-DISPLAY "Number of e's : " NumEs.
-*> Convert to uppercase
-DISPLAY FUNCTION UPPER-CASE(SampStr).
-*> Convert to lowercase
-DISPLAY FUNCTION LOWER-CASE(SampStr).
+*> We process a file by loading one record into memory
+*> This is called a Record Buffer
  
-*> Join 2 strings with a space between them
-*> delimited specifies the end of the string
-*> being size (the whole string) or spaces
-*> (up to the 1st space) or some other character
-*> surrounded with quotes like "#" for example
-STRING FName DELIMITED BY SIZE
-SPACE
-LName DELIMITED BY SIZE
-INTO FLName.
-DISPLAY FLName.
- 
-*> Get just the 1st word up to the space
-*> delimited by size gets the whole string
-*> and join all 3 into a new string
-*> If the container isn't big enough for the
-*> string it overflows.
-STRING FLName DELIMITED BY SPACES
-SPACE
-MName DELIMITED BY SIZE
-SPACE
-LName DELIMITED BY SIZE
-INTO FMLName
-ON OVERFLOW DISPLAY 'Overflowed'.
-DISPLAY FMLName.
- 
-*> Grab The egg
-STRING SStr1 DELIMITED BY SIZE
-SPACE
-*> Grab is and the space up to #
-SStr2 DELIMITED BY "#"
-*> Insert the above starting at index 1 as defined
-*> by pointer(1 means the 1 letter, will replace the same string length)
-INTO Dest
-WITH POINTER Ptr
-ON OVERFLOW DISPLAY 'Overflowed'.
-DISPLAY Dest.
- 
-*> Replacing is used to replace strings or characters
-INSPECT Dest REPLACING ALL 'egg' BY 'dog'.
-DISPLAY Dest.
- 
-*> Unstring splits a string into multiple strings
-*> based on a delimiter
-UNSTRING SStr1 DELIMITED BY SPACE
-INTO SStr3, SStr4
-END-UNSTRING.
-DISPLAY SStr4.
- 
+*> Open the file and if it doesn't exist create it
+*> Add data to all fields, write them to the file
+*> and close the file
+OPEN OUTPUT CustomerFile.
+       MOVE 00001 TO IDNum.
+       MOVE 'Doug' TO FirstName.
+       MOVE 'Thomas' TO LastName.
+       WRITE CustomerData
+       END-WRITE.
+CLOSE CustomerFile.
 STOP RUN.
- 
