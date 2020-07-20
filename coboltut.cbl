@@ -1,133 +1,78 @@
-       >>SOURCE FORMAT FREE       
+       >>SOURCE FORMAT FREE
+*> Tables contain multiple data items like arrays
+*> Indexes are called subscripts in COBOL and start
+*> at subscript 1 instead of 0. You define the 
+*> containing data with a record description.
 IDENTIFICATION DIVISION.
-PROGRAM-ID. tutorial10.
-*> This program has a menu system and allows you to
-*> Add, Update, Delete and Display Customer Data
-ENVIRONMENT DIVISION.
-INPUT-OUTPUT SECTION.
-FILE-CONTROL.
-*> Select to use a file with keys (Indexed File)
-*> We will randomly access data vs. sequential
-*> Define the name associated with the key
-       SELECT CustomerFile ASSIGN TO "customers.txt"
-           ORGANIZATION IS INDEXED
-           ACCESS MODE IS RANDOM
-           RECORD KEY IS IDNum.
- 
+PROGRAM-ID. tutorial11.
 DATA DIVISION.
-FILE SECTION.
-*> Model customer data
-FD CustomerFile.
-       01 CustomerData.
-           02 IDNum PIC 99.
-           02 FirstName PIC X(15).
-           02 LastName PIC X(15).
  
 WORKING-STORAGE SECTION.
-       *> Customer menu choice
-       01 Choice PIC 9.
-       *> Tracks whether to exit
-       01 StayOpen PIC X VALUE 'Y'.
-       *> Tracks whether the customer exists
-       01 CustExists PIC X.
+*> Declare a 1 dimensional table
+01 Table1.
+       02  Friend  PIC X(15) OCCURS 4 TIMES.
+ 
+*> Declare a multidimensional table
+01 CustTable.
+       02 CustName OCCURS 5 TIMES.
+           03 FName PIC X(15).
+           03 LName PIC X(15).
+ 
+*> Declare a table with indexes
+01 OrderTable.
+       02 Product OCCURS 2 TIMES INDEXED BY I.
+           03 ProdName PIC X(10).
+           03 ProdSize OCCURS 3 TIMES INDEXED BY J.
+               04 SizeType PIC A.
  
 PROCEDURE DIVISION.
-StartPara.
-       *> To access data randomly you must use I-O mode
-       OPEN I-O CustomerFile.
-       *> Continue execution until StayOpen is N which
-       *> happens if the user enters a number not 1 thru 4
-       PERFORM UNTIL StayOpen='N'
-           DISPLAY " "
-           DISPLAY "CUSTOMER RECORDS"
-           DISPLAY "1 : Add Customer"
-           DISPLAY "2 : Delete Customer"
-           DISPLAY "3 : Update Customer"
-           DISPLAY "4 : Get Customer"
-           DISPLAY "0 : Quit"
-           DISPLAY ": " WITH NO ADVANCING
-           ACCEPT Choice
-           *> Execute different paragraphs based on option
-           EVALUATE Choice
-               WHEN 1 PERFORM AddCust
-               WHEN 2 PERFORM DeleteCust
-               WHEN 3 PERFORM UpdateCust
-               WHEN 4 PERFORM GetCust
-               *> When N we jump out of the loop
-               WHEN OTHER move 'N' TO StayOpen
-           END-EVALUATE
-          
-       END-PERFORM.
-       *> Close the file and stop execution
-       CLOSE CustomerFile
-       STOP RUN.
+       *> Fill 1D table with data and output
+       MOVE 'Joy' TO Friend(1).
+       MOVE 'Willow' TO Friend(2).
+       MOVE 'Ivy' TO Friend(3).
+       DISPLAY Friend(1).
+       DISPLAY Table1.
  
-AddCust.
-       DISPLAY " ".
-       DISPLAY "Enter ID : " WITH NO ADVANCING.
-       ACCEPT IDNum.
-       DISPLAY "Enter First Name : "  WITH NO ADVANCING.
-       ACCEPT FirstName.
-       DISPLAY "Enter Last Name : " WITH NO ADVANCING.
-       ACCEPT LastName.
-       DISPLAY " ".
-       *> Write customer data or display error if ID taken
-       WRITE CustomerData
-           INVALID KEY DISPLAY "ID Taken"
-       END-WRITE.
+       *> Fill MD table with data and output
+       MOVE 'Paul' TO FName(1).
+       MOVE 'Smith' TO LName(1).
+       MOVE 'Sally' TO FName(2).
+       MOVE 'Smith' TO LName(2).
+       DISPLAY CustName(1).
+       DISPLAY CustTable.
+       
+       *> Working with indexed tables
+       *> Set index value with SET
+       SET I J TO 1.
+       MOVE 'Blue Shirt' TO Product(I).
+       MOVE 'S' TO ProdSize(I,J).
+       *> Increment with SET
+       SET J UP BY 1
+       MOVE 'M' TO ProdSize(I,J).
+       *> Decrement with SET
+       SET J DOWN BY 1
+       *> Fill with product information
+       MOVE 'Blue ShirtSMLRed Shirt SML' TO OrderTable.
+       *> Increment I as we get products
+       PERFORM GetProduct VARYING I FROM 1 BY 1 UNTIL I>2.
+       GO TO LookUp.
  
+GetProduct.
+       DISPLAY Product(I).
+       *> Get associated product sizes
+       PERFORM GetSizes VARYING J FROM 1 BY 1 UNTIL J>3.
  
-DeleteCust.
-       DISPLAY " ".
-       DISPLAY "Enter Customer ID to Delete : " WITH NO ADVANCING.
-       ACCEPT IDNum.
-       *> Delete customer based on ID
-       DELETE CustomerFile
-       INVALID KEY DISPLAY "Key Doesn't Exist"
-       END-DELETE.
+GetSizes.
+       DISPLAY ProdSize(I,J).
+       
+LookUp.
+       SET I TO 1.
+       *> Search will look for supplied value or
+       *> output Not Found
+       SEARCH Product
+           AT END DISPLAY 'Product Not Found'
+           WHEN ProdName(I) = 'Red Shirt'
+               DISPLAY 'Red Shirt Found'
+        END-SEARCH.
  
-UpdateCust.
-       MOVE 'Y' TO CustExists.
-       DISPLAY " ".
-       DISPLAY "Enter ID to Update : " WITH NO ADVANCING.
-       ACCEPT IDNum.
-       *> Read customer or mark N if doesn't exist
-       READ CustomerFile
-           INVALID KEY MOVE 'N' TO CustExists
-       END-READ.
-       *> Display error because ID doesn't exist
-       IF CustExists='N'
-           DISPLAY "Customer Doesn't Exist"
-       ELSE
-           DISPLAY "Enter the New First Name : " WITH NO ADVANCING
-           ACCEPT FirstName
-           DISPLAY "Enter the New Last Name : " WITH NO ADVANCING
-           ACCEPT LastName
-       END-IF.
-       *> Update record for matching ID
-       REWRITE CustomerData
-           INVALID KEY DISPLAY "Customer Not Updated"
-       END-REWRITE.
- 
- 
-GetCust.
-       *> Assume customer exists
-       MOVE 'Y' TO CustExists.
-       DISPLAY " ".
-       DISPLAY "Enter Customer ID to Find : " WITH NO ADVANCING.
-       ACCEPT IDNum.
-       *> Mark N if customer ID doesn't exist
-       READ CustomerFile
-           INVALID KEY MOVE 'N' TO CustExists
-       END-READ.
-       *> Display error
-       IF CustExists='N'
-           DISPLAY "Customer Doesn't Exist"
-       ELSE
-           DISPLAY "ID : " IDNum
-           DISPLAY "First Name : " FirstName
-           DISPLAY "Last Name : " LastName
-END-IF.
-
-
-
+STOP RUN.

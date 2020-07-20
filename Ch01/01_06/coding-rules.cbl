@@ -1,6 +1,5 @@
 000001 IDENTIFICATION DIVISION.
 000002 PROGRAM-ID. SAMPLE as "SAMPLE".
-000003 AUTHOR. 	PEGGY FISHER.
       ******************************************************************************
       *            This program asks the user for their name and says hello        *
       ******************************************************************************
@@ -20,7 +19,6 @@
    
 
 000013 PROCEDURE DIVISION.
-000014 0001-HELLO-WORLD.
 	   
 000015	   DISPLAY "Enter your first name".
 000016	   ACCEPT WS-NAME. 

@@ -1,6 +1,5 @@
        IDENTIFICATION DIVISION.  
        PROGRAM-ID. SAMPLE as "SAMPLE".
-	   AUTHOR. 	PEGGY FISHER.
 
        ENVIRONMENT DIVISION.
 	   CONFIGURATION SECTION.
@@ -18,7 +17,6 @@
    
 
        PROCEDURE DIVISION.
-       0001-HELLO-WORLD.
 	   
 		   DISPLAY "Enter your first name".
 		   ACCEPT WS-NAME.
