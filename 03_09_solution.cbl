@@ -83,7 +83,7 @@
 		   DISPLAY " ".
 		   DISPLAY " ".
            DISPLAY "Welcome to Pet Supplies and More".
-		   SET WS-USER-RESPONSE TO 'Y'.
+		*>    SET WS-USER-RESPONSE TO "Y".
 		   PERFORM 0200-PROCESS-ITEMS THRU 0200-END 
 		      UNTIL DONE.
 		   PERFORM 0290-PRINT-TOTAL.
