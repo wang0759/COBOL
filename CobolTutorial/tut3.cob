@@ -77,13 +77,15 @@ display "Vote " canVoteFlag
 
 display "enter a number or X to exit: "
     accept TestNumber
+perform until not ANumber
     evaluate true
-    when IsPrime display "Prime"
-    when isOdd   display "Odd"
-    when isEven  display "Even"
-    when LessThan5 display "less than 5"
-    when other display "default action"
+       when IsPrime display "Prime"
+       when isOdd   display "Odd"
+       when isEven  display "Even"
+       when LessThan5 display "less than 5"
+       when other display "default action"
     end-evaluate
-    *> accept TestNumber
+    accept TestNumber
+end-perform
 
 STOP RUN.
