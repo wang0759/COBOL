@@ -37,8 +37,12 @@
 		ACCEPT WS-DONE.    	
         MOVE WS-TOTAL-COST TO WS-DISPLAY-TOTAL
 	    DISPLAY "Total: ", WS-DISPLAY-TOTAL.
+        PERFORM DisplayGreetings 5 TIMES
+        
 
 		STOP RUN.
-		  
+	    DisplayGreetings.
+           DISPLAY "Greetings from Quanyi".
+            
            
         END PROGRAM CONSTANTS.
