@@ -18,20 +18,4 @@ FILE SECTION.
 
 WORKING-STORAGE SECTION.
 
-01 CityCode PIC 9 value 0.
-       88 CityIsDublin VALUE 1.
-		 88 CityIsLimerick VALUE 2.
-		 88 CityIsCork VALUE 3.
-	
-
-procedure division.
-
-display "PLEASE ENTER YOUR CITY CODE: " WITH no advancing
-accept CityCode
-if CityIsLimerick
-display "Hey, I am here"
-	end-if
-if CityIsCork
-display "where is herer?"
-	end-if
-STOP RUN.
+01 InputChar
