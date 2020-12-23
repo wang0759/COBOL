@@ -14,7 +14,7 @@ DATA DIVISION.
 FILE SECTION.
 
 WORKING-STORAGE SECTION.
-01 PlayerGuess-A PIC 9 VALUE 1.
+01 PlayerGuess-A PIC 9 .
    88 Rock-A VALUE 1.
    88 Paper-A VALUE 2.
    88 Scissors-A VALUE 3.
