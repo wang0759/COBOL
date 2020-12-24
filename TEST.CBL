@@ -18,4 +18,13 @@ FILE SECTION.
 
 WORKING-STORAGE SECTION.
 
-01 InputChar
+01 RepCount  pic 9(3).
+01 prnRepCount pic z,zz9.
+01 targetNum  pic 9(3) value 100.
+
+procedure division.
+perform varying RepCount from 0 by 10 until RepCount > targetNum
+move RepCount to prnRepCount
+display "Counting" prnRepCount
+end-perform
+stop run.
